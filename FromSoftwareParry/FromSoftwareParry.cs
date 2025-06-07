@@ -104,7 +104,7 @@ namespace FromSoftwareParry
         // |   GENERAL   |
         // +-------------+ 
 
-        [ModOption(name: "Use FromSoftware Parries", tooltip: "Turns on/off the FromSoftware parries mod.", defaultValueIndex = 1, order = 0)]
+        [ModOption(name: "Use Mod", tooltip: "Turns on/off the FromSoftware parries mod.", defaultValueIndex = 1, order = 0)]
         public static bool useFSParries;
 
         [ModOption(name: "Parry Type", tooltip: "Determines what type parry to perform.", defaultValueIndex = 1, order = 1)]
@@ -211,6 +211,16 @@ namespace FromSoftwareParry
             GameManager.local.StartCoroutine(LoadSFX());
             EventManager.onCreatureKill += OnCreatureKill;
             EventManager.onCreatureAttackParry += OnCreatureAttackParry;
+        }
+
+        public override void ScriptUpdate()
+        {
+            base.ScriptUpdate();
+            if (useFSParries && Player.currentCreature)
+            {
+                Player.currentCreature.TryRemoveSkill("ShockParry");
+                Player.currentCreature.TryRemoveSkill("TemporalRiposte");
+            }
         }
 
         private void OnCreatureAttackParry(Creature parriedCreature, Item parriedItem, Creature parryingCreature, Item parryingItem, CollisionInstance collisionInstance)
